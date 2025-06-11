@@ -18,7 +18,7 @@ https://herlang.denohub.com
 ### 使用 REPL
 
 ```bash
-$ git clone https://github.com/flaneur2020/herlang.git
+$ git clone https://github.com/justjavac/herlang.git
 $ make repl
 ```
 
