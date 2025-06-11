@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "start": "webpack serve",
-    "build": "env NODE_ENV=production webpack-cli",
+    "build": "cross-env NODE_ENV=production webpack-cli",
     "format": "prettier src/**/*.js src/**/*.css *.config.js --write",
     "deploy": "gh-pages -d dist",
     "predeploy": "yarn build"
@@ -12,6 +12,7 @@
   "devDependencies": {
     "codemirror": "^5.39.2",
     "copy-webpack-plugin": "^8.1.1",
+    "cross-env": "^7.0.3",
     "css-loader": "^5.2.4",
     "cssnano": "^5.0.1",
     "gh-pages": "^3.1.0",
