@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "webpack serve",
-    "build": "cross-env NODE_ENV=production webpack-cli",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack serve",
+    "build": "cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider webpack-cli",
     "format": "prettier src/**/*.js src/**/*.css *.config.js --write",
     "deploy": "gh-pages -d dist",
     "predeploy": "yarn build"
