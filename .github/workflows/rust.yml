@@ -28,7 +28,7 @@ jobs:
         run: cargo clippy
 
       - name: Test
-        run: make test --locked
+        run: cargo test --locked
 
       - name: Build release
         run: cargo build --release --locked
