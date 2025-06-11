@@ -258,7 +258,7 @@ impl Lexer {
             // HER Aba-aba keywords
             "想要你一个态度" => Token::Func,
             "我认为" => Token::Let,
-            "你那么普通却那么自信" => Token::Bool(true),
+            "那么普通却那么自信" => Token::Bool(true),
             "那咋了" => Token::Bool(false),
             "姐妹们觉得呢" => Token::If,
             "那能一样吗" => Token::Else,

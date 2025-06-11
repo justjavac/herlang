@@ -13,7 +13,7 @@ export const SNIPPETS = [
 
   {
     label: "姐妹们觉得呢",
-    value: `姐妹们觉得呢 (你那么普通却那么自信) {
+    value: `姐妹们觉得呢 (那么普通却那么自信) {
   "Herllo";
 } 我接受不等于我同意 {
   "unreachable";
