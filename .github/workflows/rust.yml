@@ -13,9 +13,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
+          profile: minimal
           toolchain: nightly
-          components: clippy
           override: true
+          components: rustfmt, clippy
 
       - name: Format
         run: cargo fmt --all -- --check
