@@ -1,4 +1,4 @@
-#![allow(clippy::derive_hash_xor_eq)]
+#![allow(clippy::derived_hash_with_manual_eq)]
 
 use ast::*;
 use evaluator::env::*;
@@ -31,30 +31,30 @@ pub enum Object {
 impl fmt::Display for Object {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Object::Int(ref value) => write!(f, "{}", value),
+            Object::Int(ref value) => write!(f, "{value}"),
             Object::String(ref value) => write!(f, "{}", escape_str(value)),
-            Object::Bool(ref value) => write!(f, "{}", value),
+            Object::Bool(ref value) => write!(f, "{value}"),
             Object::Array(ref objects) => {
                 let mut result = String::new();
                 for (i, obj) in objects.iter().enumerate() {
                     if i < 1 {
-                        result.push_str(&format!("{}", obj));
+                        result.push_str(&format!("{obj}"));
                     } else {
-                        result.push_str(&format!(", {}", obj));
+                        result.push_str(&format!(", {obj}"));
                     }
                 }
-                write!(f, "[{}]", result)
+                write!(f, "[{result}]")
             }
             Object::Hash(ref hash) => {
                 let mut result = String::new();
                 for (i, (k, v)) in hash.iter().enumerate() {
                     if i < 1 {
-                        result.push_str(&format!("{}: {}", k, v));
+                        result.push_str(&format!("{k}: {v}"));
                     } else {
-                        result.push_str(&format!(", {}: {}", k, v));
+                        result.push_str(&format!(", {k}: {v}"));
                     }
                 }
-                write!(f, "{{{}}}", result)
+                write!(f, "{{{result}}}")
             }
             Object::Func(ref params, _, _) => {
                 let mut result = String::new();
@@ -62,17 +62,17 @@ impl fmt::Display for Object {
                     if i < 1 {
                         result.push_str(&s.to_string());
                     } else {
-                        result.push_str(&format!(", {}", s));
+                        result.push_str(&format!(", {s}"));
                     }
                 }
-                write!(f, "fn({}) {{ ... }}", result)
+                write!(f, "fn({result}) {{ ... }}")
             }
             Object::Builtin(_, _) => write!(f, "[builtin function]"),
             Object::Null => write!(f, "null"),
             Object::BreakStatement => write!(f, "[break statement]"),
             Object::ContinueStatement => write!(f, "[continue statement]"),
-            Object::ReturnValue(ref value) => write!(f, "ReturnValue({})", value),
-            Object::Error(ref value) => write!(f, "Error({})", value),
+            Object::ReturnValue(ref value) => write!(f, "ReturnValue({value})"),
+            Object::Error(ref value) => write!(f, "Error({value})"),
         }
     }
 }

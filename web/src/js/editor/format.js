@@ -1,9 +1,9 @@
-import { Command } from './';
+import { Command } from "./";
 
-const format = document.getElementById('format');
+const format = document.getElementById("format");
 
 format.addEventListener(
-  'click',
+  "click",
   (e) => {
     e.preventDefault();
     Command.format();

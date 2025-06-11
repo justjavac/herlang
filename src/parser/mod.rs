@@ -10,10 +10,10 @@ pub enum ParseError {
 
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match &*self {
+        match self {
             ParseError::UnexpectedToken { want: w, got: g } => match w {
-                Some(w) => write!(f, "Unexpected Token: expected {:?}, got {:?}", w, g),
-                None => write!(f, "Unexpected Token: no prefix rule for {:?}", g),
+                Some(w) => write!(f, "Unexpected Token: expected {w:?}, got {g:?}"),
+                None => write!(f, "Unexpected Token: no prefix rule for {g:?}"),
             },
         }
     }
@@ -158,10 +158,7 @@ impl Parser {
             _ => return None,
         };
 
-        let name = match self.parse_ident() {
-            Some(name) => name,
-            None => return None,
-        };
+        let name = self.parse_ident()?;
 
         if !self.expect_next_token(Token::Assign) {
             return None;
@@ -169,10 +166,7 @@ impl Parser {
 
         self.bump();
 
-        let expr = match self.parse_expr(Precedence::Lowest) {
-            Some(expr) => expr,
-            None => return None,
-        };
+        let expr = self.parse_expr(Precedence::Lowest)?;
 
         if self.next_token_is(&Token::Semicolon) {
             self.bump();
@@ -184,10 +178,7 @@ impl Parser {
     fn parse_return_stmt(&mut self) -> Option<Stmt> {
         self.bump();
 
-        let expr = match self.parse_expr(Precedence::Lowest) {
-            Some(expr) => expr,
-            None => return None,
-        };
+        let expr = self.parse_expr(Precedence::Lowest)?;
 
         if self.next_token_is(&Token::Semicolon) {
             self.bump();
@@ -316,7 +307,8 @@ impl Parser {
     }
 
     fn parse_array_expr(&mut self) -> Option<Expr> {
-        self.parse_expr_list(Token::Rbracket).map(|list| Expr::Literal(Literal::Array(list)))
+        self.parse_expr_list(Token::Rbracket)
+            .map(|list| Expr::Literal(Literal::Array(list)))
     }
 
     fn parse_hash_expr(&mut self) -> Option<Expr> {
@@ -325,10 +317,7 @@ impl Parser {
         while !self.next_token_is(&Token::Rbrace) {
             self.bump();
 
-            let key = match self.parse_expr(Precedence::Lowest) {
-                Some(expr) => expr,
-                None => return None,
-            };
+            let key = self.parse_expr(Precedence::Lowest)?;
 
             if !self.expect_next_token(Token::Colon) {
                 return None;
@@ -336,10 +325,7 @@ impl Parser {
 
             self.bump();
 
-            let value = match self.parse_expr(Precedence::Lowest) {
-                Some(expr) => expr,
-                None => return None,
-            };
+            let value = self.parse_expr(Precedence::Lowest)?;
 
             pairs.push((key, value));
 
@@ -397,7 +383,8 @@ impl Parser {
 
         self.bump();
 
-        self.parse_expr(Precedence::Prefix).map(|expr| Expr::Prefix(prefix, Box::new(expr)))
+        self.parse_expr(Precedence::Prefix)
+            .map(|expr| Expr::Prefix(prefix, Box::new(expr)))
     }
 
     fn parse_infix_expr(&mut self, left: Expr) -> Option<Expr> {
@@ -419,16 +406,14 @@ impl Parser {
 
         self.bump();
 
-        self.parse_expr(precedence).map(|expr| Expr::Infix(infix, Box::new(left), Box::new(expr)))
+        self.parse_expr(precedence)
+            .map(|expr| Expr::Infix(infix, Box::new(left), Box::new(expr)))
     }
 
     fn parse_index_expr(&mut self, left: Expr) -> Option<Expr> {
         self.bump();
 
-        let index = match self.parse_expr(Precedence::Lowest) {
-            Some(expr) => expr,
-            None => return None,
-        };
+        let index = self.parse_expr(Precedence::Lowest)?;
 
         if !self.expect_next_token(Token::Rbracket) {
             return None;
@@ -442,12 +427,13 @@ impl Parser {
 
         match self.parse_ident() {
             Some(name) => match name {
-                Ident(str) => {
-                    Some(Expr::Index(Box::new(left), Box::new(Expr::Literal(Literal::String(str)))))
-                },
-                _ => return None
+                Ident(str) => Some(Expr::Index(
+                    Box::new(left),
+                    Box::new(Expr::Literal(Literal::String(str))),
+                )),
+                _ => None,
             },
-            None => return None,
+            None => None,
         }
     }
 
@@ -470,10 +456,7 @@ impl Parser {
 
         self.bump();
 
-        let cond = match self.parse_expr(Precedence::Lowest) {
-            Some(expr) => expr,
-            None => return None,
-        };
+        let cond = self.parse_expr(Precedence::Lowest)?;
 
         if !self.expect_next_token(Token::Rparen) || !self.expect_next_token(Token::Lbrace) {
             return None;
@@ -506,10 +489,7 @@ impl Parser {
 
         self.bump();
 
-        let cond = match self.parse_expr(Precedence::Lowest) {
-            Some(expr) => expr,
-            None => return None,
-        };
+        let cond = self.parse_expr(Precedence::Lowest)?;
 
         if !self.expect_next_token(Token::Rparen) || !self.expect_next_token(Token::Lbrace) {
             return None;
@@ -528,10 +508,7 @@ impl Parser {
             return None;
         }
 
-        let params = match self.parse_func_params() {
-            Some(params) => params,
-            None => return None,
-        };
+        let params = self.parse_func_params()?;
 
         if !self.expect_next_token(Token::Lbrace) {
             return None;
@@ -576,10 +553,7 @@ impl Parser {
     }
 
     fn parse_call_expr(&mut self, func: Expr) -> Option<Expr> {
-        let args = match self.parse_expr_list(Token::Rparen) {
-            Some(args) => args,
-            None => return None,
-        };
+        let args = self.parse_expr_list(Token::Rparen)?;
 
         Some(Expr::Call {
             func: Box::new(func),

@@ -43,15 +43,15 @@ const icons = {
 `,
 };
 
-const defaultIconFunc = () => '';
+const defaultIconFunc = () => "";
 
 export class Icon extends HTMLElement {
   static get observedAttributes() {
-    return ['icon', 'size', 'color'];
+    return ["icon", "size", "color"];
   }
 
   connectedCallback() {
-    this.root = this.attachShadow({ mode: 'open' });
+    this.root = this.attachShadow({ mode: "open" });
     this.render();
   }
 

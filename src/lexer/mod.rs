@@ -1,5 +1,5 @@
 extern crate unicode_normalization;
-/// Unicode lexer for the PUA language.
+/// Unicode lexer for the HER language.
 /// Some functions taken from `rust/compiler/rustc_lexer/src/lib.rs`.
 extern crate unicode_xid;
 use crate::token::Token;
@@ -18,7 +18,7 @@ pub fn nfc_normalize(string: &str) -> String {
     }
 }
 
-/// True if `c` is considered a whitespace according to PUA. Does not include \n.
+/// True if `c` is considered a whitespace according to HER. Does not include \n.
 pub fn is_whitespace(c: char) -> bool {
     // This is Pattern_White_Space minus \n.
     //
@@ -75,8 +75,8 @@ fn is_emoji_like(c: char) -> bool {
 /// True if `c` is valid as a first character of an identifier.
 /// Compared to Rust, we additionally allow $ and ¥.
 fn is_id_start(c: char) -> bool {
-    ('a'..='z').contains(&c)
-        || ('A'..='Z').contains(&c)
+    c.is_ascii_lowercase()
+        || c.is_ascii_uppercase()
         || c == '_'
         || c == '$'
         || c == '¥'
@@ -87,9 +87,9 @@ fn is_id_start(c: char) -> bool {
 /// True if `c` is valid as a non-first character of an identifier.
 /// Compared to Rust, we additionally allow $ and ¥.
 fn is_id_continue(c: char) -> bool {
-    ('a'..='z').contains(&c)
-        || ('A'..='Z').contains(&c)
-        || ('0'..='9').contains(&c)
+    c.is_ascii_lowercase()
+        || c.is_ascii_uppercase()
+        || c.is_ascii_digit()
         || c == '_'
         || c == '$'
         || c == '¥'
@@ -255,20 +255,21 @@ impl Lexer {
             "continue" => Token::Continue,
             "else" => Token::Else,
             "return" => Token::Return,
-            // PUA Aba-aba keywords
-            "抓手" => Token::Func,
-            "赋能" => Token::Let,
-            "三七五" => Token::Bool(true),
-            "三二五" => Token::Bool(false),
-            "细分" => Token::If,
-            "路径" => Token::Else,
-            "闭环" => Token::While,
-            "破圈" => Token::Break,
-            "反哺" => Token::Return,
-            "对齐" => Token::Equal,
-            "联动" => Token::Plus,
+            // HER Aba-aba keywords
+            "想要你一个态度" => Token::Func,
+            "我认为" => Token::Let,
+            "你那么普通却那么自信" => Token::Bool(true),
+            "那咋了" => Token::Bool(false),
+            "姐妹们觉得呢" => Token::If,
+            "那能一样吗" => Token::Else,
+            "我接受不等于我同意" => Token::Else,
+            "你再说一遍" => Token::While,
+            "下头" => Token::Break,
+            "反手举报" => Token::Return,
+            "我同意" => Token::Equal,
+            "我接受" => Token::Equal,
+            "拼单" => Token::Plus,
             "差异" => Token::Minus,
-            "倾斜" => Token::Slash,
             _ => Token::Ident(nfc_normalize(&literal)),
         }
     }
@@ -478,15 +479,19 @@ if (5 < 10) {
     #[test]
     fn test_cjk_next_token() {
         let input = r#"
-赋能 fib = 抓手(n) {
-    细分 (n 对齐 0) {
-        反哺 0;
-    } 路径 细分 (n 对齐 1) {
-        反哺 1;
-    } 路径 {
-        反哺 fib(n 差异 1) + fib(n 差异 2);
-    }
+我认为 fib = 想要你一个态度(n) {
+  姐妹们觉得呢 (n 我接受 0) {
+    反手举报 0;
+  }
+
+  姐妹们觉得呢 (n 我接受 1) {
+    反手举报 1;
+  } 我接受不等于我同意 {
+    反手举报 fib(n - 1) + fib(n - 2);
+  }
 };
+
+fib(10);
 "#;
 
         let tests = vec![

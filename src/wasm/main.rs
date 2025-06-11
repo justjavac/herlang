@@ -1,13 +1,13 @@
-extern crate pua_lang;
+extern crate herlang;
 
-use pua_lang::ast::Program;
-use pua_lang::evaluator::builtins::new_builtins;
-use pua_lang::evaluator::env::Env;
-use pua_lang::evaluator::object::Object;
-use pua_lang::evaluator::Evaluator;
-use pua_lang::formatter::Formatter;
-use pua_lang::lexer::Lexer;
-use pua_lang::parser::Parser;
+use herlang::ast::Program;
+use herlang::evaluator::builtins::new_builtins;
+use herlang::evaluator::env::Env;
+use herlang::evaluator::object::Object;
+use herlang::evaluator::Evaluator;
+use herlang::formatter::Formatter;
+use herlang::lexer::Lexer;
+use herlang::parser::Parser;
 use std::cell::RefCell;
 use std::ffi::{CStr, CString};
 use std::mem;

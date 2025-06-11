@@ -4,8 +4,8 @@ export const Module = {
   _dealloc: null,
   _eval: null,
   _format: null,
-  _textEncoder: new TextEncoder('UTF-8'),
-  _textDecoder: new TextDecoder('UTF-8'),
+  _textEncoder: new TextEncoder("UTF-8"),
+  _textDecoder: new TextDecoder("UTF-8"),
 
   isReady: () => Module._memory != null,
 
@@ -53,7 +53,7 @@ export const Module = {
     let i = 0;
     while (buf[i] !== 0) {
       if (buf[i] === undefined) {
-        throw new Error('Access to memory that does not exist!!');
+        throw new Error("Access to memory that does not exist!!");
       }
       i++;
     }

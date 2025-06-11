@@ -1,326 +1,200 @@
-# pua-lang
+# herlang
 
-> PUA Programming Language written in Rust.
+> herlang 编程语言，使用 Rust 编写。
 
-## What's pua-lang?
+## 致谢
 
-pua-lang is a dialect of The Monkey Programming Language, intended to mirror the inspirational babble of Alibaba managers ("Aba-aba").
-The name "pua" refers to the manipulative way Alibaba treats its employees -- much like how pickup artists treat their trophies.
+感谢以下项目：
 
-This implementation is a fork of [rs-monkey-lang](https://github.com/wadackel/rs-monkey-lang).
-`Monkey` is a programming language designed to learn interpreters.
-It comes from [Writing An Interpreter In Go](https://compilerbook.com/).
+- [rs-monkey-lang](https://github.com/wadackel/rs-monkey-lang)
+- [pua-lang](https://github.com/flaneur2020/pua-lang)
 
-## Try pua-lang!
+## 试用 herlang！
 
-### with wasm playground
-https://flaneur2020.github.io/pua-lang/
+### 在 wasm playground 上体验
 
-We are aware that the output streams don't quite work.  Rust doesn't really
-have I/O redirection and `wasm32-unknown-unknown` has no I/O by default.
+https://herlang.denohub.com
 
-### with REPL
+### 使用 REPL
 
 ```bash
-$ git clone https://github.com/flaneur2020/pua-lang.git
+$ git clone https://github.com/flaneur2020/herlang.git
 $ make repl
 ```
 
-## Documentation
+## 文档
 
-:warning: **Please note that there may be some mistakes.**
+### 对照表
 
-### Summary
+| Monkey | herlang                       |
+| ------ | ----------------------------- |
+| if     | 姐妹们觉得呢                  |
+| else   | 那能一样吗/我接受不等于我同意 |
+| while  | 你再说一遍                    |
+| break  | 下头                          |
+| true   | 你那么普通却那么自信          |
+| false  | 那咋了                        |
+| let    | 我认为                        |
+| fn     | 想要你一个态度                |
+| return | 反手举报                      |
+| =      | 我同意/我接受                 |
+| +      | 拼单                          |
+| -      | 差异                          |
+| output | 输出                          |
+| quit   | 哼                            |
 
-- Everything Monkey has:
-  - C-like syntax
-  - variable bindings
-  - integers and booleans
-  - a string data structure
-  - an array data structure
-  - a hash data structure
-  - arithmetic expressions
-  - built-in functions
-  - first-class and higher-order functions • closures
-- Unicode identifiers (UAX #31, XID) plus monetary extensions (`[¥$_]`) and an overly-lax definition of Emojis.
-- Rust-compatible double-quoted string syntax.
-- Ridiculous naming for the Aba-aba. Comparison with Monkey:
+### 语法概览
 
-|Monkey|pua-lang|Explanation|
-|---|---|---|
-|if|细分|"specialization"|
-|else|路径|"pathway"|
-|while|闭环|"closed loop"|
-|break|破圈|"break the circle"|
-|true|三七五|"3.75", a passing performance evalulation result|
-|false|三二五|"3.25", a failing performance evalulation result|
-|let|赋能|"empower"|
-|fn|抓手|"handle", as in getting a handle on things|
-|return|反哺|"repay", used in Alibaba as a general term for feedback in systems|
-|Array|组合拳|"combo move"; not yet a word in the language|
-|Hash|载体|"carrier"; not yet a word in the language|
-|=|对齐|"align"|
-|+|联动|"linkage"|
-|-|差异|"difference"|
-|/|倾斜|"tilt"|
-|puts|输出|"output"|
-|quit|淘汰|"eliminate"|
-|(atoi)|量化|quantify
-
-The precise set of renames may change from time to time as we explore new ~~avanues of profit~~ pathways to the full enablement of our ~~shareholders~~ customers. You are encouraged to (ahem) carefully study the spirit of `src/lexer/mod.rs` and `src/evaluator/builtins.rs` in order to align yourself with Ali-speak and maximize your output.
-
-### Syntax overview
-
-An example of Fibonacci function.
+斐波那契函数示例：
 
 ```
-赋能 fib = 抓手(x) {
-  细分 (x 对齐 0) {
-    反哺 0;
+我认为 fib = 想要你一个态度(x) {
+  姐妹们觉得呢 (x 我接受 0) {
+    反手举报 0;
   }
-  细分 (x 对齐 1) {
-    反哺 1;
-  } 路径 {
-    反哺 fib(x - 1) 联动 fib(x - 2);
+
+  姐妹们觉得呢 (x 我接受 1) {
+    反手举报 1;
+  } 我接受不等于我同意 {
+    反手举报 fib(x - 1) + fib(x - 2);
   }
 };
 
 fib(10);
 ```
 
-#### 细分
+#### 姐妹们觉得呢
 
-细分 supports the general `细分`. `路径` exists, but` 细分 路径` does not exist yet.
+支持通用的 `姐妹们觉得呢`。`我接受不等于我同意` 存在，但
+`姐妹们觉得呢 我接受不等于我同意` 目前尚未实现。
 
 ```
-细分 (三七五) {
+姐妹们觉得呢 (x 我接受 0) {
   10;
-} 路径 {
+} 我接受不等于我同意 {
   5;
 }
 ```
 
-#### 闭环
+#### 你再说一遍
 
-With the 闭环 we can execute a set of statements as long as a condition is 三七五.
+使用`你再说一遍`可以在条件为`你那么普通却那么自信`时执行一组语句。
 
 ```
-闭环 (三七五) {
-    输出("年年有抓手");
+你再说一遍 (你那么普通却那么自信) {
+    小作文("我就是想要一个态度");
 }
 ```
 
+#### 运算符
 
-#### Operators
-
-It supports the general operations.
+支持常见运算。
 
 ```
 1 + 2 + (3 * 4) - (10 / 5);
-!三七五;
-!三二五;
+!你那么普通却那么自信;
+!那咋了;
 +10;
 -5;
-"年年有抓手" + " " + "岁岁有闭环";
+"Herllo" 拼单 "World";
 ```
 
-#### 反哺
+#### 反手举报
 
-It returns the value immediately. No further processing will be executed.
+立即返回值，不再执行后续语句。
 
 ```
-细分 (三七五) {
-  反哺;
+姐妹们觉得呢 (x 我接受 0) {
+  反手举报 0;
 }
 ```
 
-```
-赋能 不变 = 抓手(工资p6) {
-  反哺 工资p6;
-};
+### 字面量
 
-不变("👨‍💻🐒烧酒");
-```
+实现了五种字面量类型。
 
-### 赋能
+#### 整数
 
-赋能, such as those supported by many programming languages, is implemented. Variables can be defined using the `赋能` keyword.
+`Integer` 表示整数值。不支持浮点数。
 
-**Format:**
-
-```
-赋能 <identifier> = <expression>;
-```
-
-**Example:**
-
-```
-赋能 x = 0;
-赋能 y = 10;
-赋能 福报 = add(5, 5);
-赋能 alias = 福报;
-赋能 identity = 抓手(x) { x };
-```
-
-### Literals
-
-Five types of literals are implemented.
-
-#### Integer
-
-`Integer` represents an integer value. Floating point numbers can not be handled.
-
-**Format:**
+**格式：**
 
 ```
 [-+]?[1-9][0-9]*;
 ```
 
-**Example:**
+**示例：**
 
 ```
 10;
 1234;
 ```
 
-#### Boolean
+#### 布尔值
 
-`Boolean` represents a general boolean type.
+`Boolean` 表示布尔类型。
 
-**Format:**
-
-```
-三七五 | 三二五;
-```
-
-**Example:**
+**格式：**
 
 ```
-三七五;
-三二五;
-
-赋能 truthy = !三二五;
-赋能 falsy = !三七五;
+你那么普通却那么自信 | 那咋了;
 ```
 
-#### String
-
-`String` represents a string. Only double quotes can be used.
-
-**Format:**
+**示例：**
 
 ```
-"<value>";
+你那么普通却那么自信;
+那咋了;
+
+我认为 男生 = 你那么普通却那么自信;
 ```
 
-**Example:**
+#### 字符串
+
+`String` 表示字符串。只能使用双引号。
+
+**格式：**
+
+```
+"<值>";
+```
+
+**示例：**
 
 ```
 "Monkey Programming Language";
 "Hello" + " " + "World";
 ```
 
-#### 组合拳
+#### 想要你一个态度
 
-`组合拳` represents an ordered contiguous element. Each element can contain different data types.
+`想要你一个态度` 支持函数定义。
 
-**Format:**
-
-```
-[<expression>, <expression>, ...];
-```
-
-**Example:**
+**格式：**
 
 ```
-[1, 2, 3 + 3, fn(x) { x }, add(2, 2), 三七五];
+想要你一个态度 (<参数一>, <参数二>, ...) { <语句块> };
 ```
 
-```
-赋能 组合拳 = [1, 三七五, 抓手(x) { x }];
-
-组合拳[0];
-组合拳[1];
-组合拳[2](10);
-组合拳[1 + 1](10);
-```
-
-#### 载体
-
-`载体` expresses data associating keys with values.
-
-**Format:**
+**示例：**
 
 ```
-{ <expression>: <expression>, <expression>: <expression>, ... };
-```
-
-**Example:**
-
-```
-赋能 载体 = {
-  "name": "Jimmy",
-  "age": 72,
-  三七五: "a boolean",
-  99: "an integer"
-};
-
-载体["name"];
-载体.name;
-载体["a" + "ge"];
-载体[三七五];
-载体[99];
-载体[100 - 1];
-```
-
-#### 抓手
-
-`抓手` supports functions like those supported by other programming languages.
-
-**Format:**
-
-```
-抓手 (<parameter one>, <parameter two>, ...) { <block statement> };
-```
-
-**Example:**
-
-```
-赋能 add = 抓手(x, y) {
-  反哺 x 联动 y;
+我认为 add = 想要你一个态度(x, y) {
+  反手举报 x 联动 y;
 };
 
 add(10, 20);
 ```
 
-```
-赋能 add = 抓手(x, y) {
-  x 联动 y;
-};
+### 内置函数
 
-add(10, 20);
-```
+你可以使用 1 个内置函数 :rocket:
 
-If `反哺` does not exist, it returns the result of the last evaluated expression.
+#### `小作文(<参数1>, <参数2>, ...): void`
+
+将指定值输出到 `stdout`。在 Playground 中输出到 `console`。
 
 ```
-赋能 addThree = 抓手(x) { x + 3 };
-赋能 callTwoTimes = 抓手(x, f) { f(f(x)) };
-
-callTwoTimes(3, addThree);
-```
-
-Passing around functions, higher-order functions and closures will also work.
-
-### Built-in Functions
-
-You can use 1 built-in function :rocket:
-
-#### `输出(<arg1>, <arg2>, ...): void`
-
-It outputs the specified value to `stdout`. In the case of Playground, it outputs to `console`.
-
-```
-输出("年年有抓手");
-输出("岁岁有闭环!");
+小作文("那咋啦？");
+小作文("那能一样吗!");
 ```

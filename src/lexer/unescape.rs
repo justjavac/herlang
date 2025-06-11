@@ -60,19 +60,19 @@ pub enum EscapeError {
 ///
 /// We re-use the Rust escaper because we have the same string syntax! Haha!
 pub fn escape_str(s: &str) -> String {
-    format!("{:?}", s)
+    format!("{s:?}")
 }
 
 pub fn unescape_str_or_byte_str_all(s: &str) -> String {
     if s.contains(&['\\', '\r'][..]) {
         let mut buf = String::with_capacity(s.len());
         let mut error = false;
-        unescape_str_or_byte_str(&s, &mut |_, unescaped_char| {
+        unescape_str_or_byte_str(s, &mut |_, unescaped_char| {
             match unescaped_char {
                 Ok(c) => buf.push(c),
                 Err(e) => {
                     error = true;
-                    buf = format!("<Lexer error: string: {:?}>", e);
+                    buf = format!("<Lexer error: string: {e:?}>");
                 }
             };
         });
@@ -154,7 +154,7 @@ fn scan_escape(first_char: char, chars: &mut Chars<'_>) -> Result<char, EscapeEr
                         // Incorrect syntax has higher priority for error reporting
                         // than unallowed value for a literal.
 
-                        break std::char::from_u32(value).ok_or_else(|| {
+                        break std::char::from_u32(value).ok_or({
                             if value > 0x10FFFF {
                                 EscapeError::OutOfRangeUnicodeEscape
                             } else {
@@ -171,7 +171,7 @@ fn scan_escape(first_char: char, chars: &mut Chars<'_>) -> Result<char, EscapeEr
                             // Stop updating value since we're sure that it's is incorrect already.
                             continue;
                         }
-                        let digit = digit as u32;
+                        let digit = digit;
                         value = value * 16 + digit;
                     }
                 };

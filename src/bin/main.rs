@@ -1,13 +1,15 @@
-extern crate pua_lang;
+extern crate herlang;
+#[cfg(feature = "binaries")]
 extern crate rustyline;
+#[cfg(feature = "binaries")]
 extern crate rustyline_derive;
 
-use pua_lang::evaluator::builtins::new_builtins;
-use pua_lang::evaluator::env::Env;
-use pua_lang::evaluator::Evaluator;
-use pua_lang::lexer::{is_whitespace, Lexer};
-use pua_lang::parser::{ParseError, Parser};
-use pua_lang::token::Token;
+use herlang::evaluator::builtins::new_builtins;
+use herlang::evaluator::env::Env;
+use herlang::evaluator::Evaluator;
+use herlang::lexer::{is_whitespace, Lexer};
+use herlang::parser::{ParseError, Parser};
+use herlang::token::Token;
 use std::borrow::Cow::{self, Borrowed, Owned};
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -22,14 +24,14 @@ use rustyline::{Cmd, CompletionType, Config, Context, EditMode, Editor};
 use rustyline_derive::Helper;
 
 #[derive(Helper)]
-struct PuaHelper {
+struct HerHelper {
     env: Rc<RefCell<Env>>,
     highlighter: MatchingBracketHighlighter,
     hinter: HistoryHinter,
     colored_prompt: String,
 }
 
-impl Completer for PuaHelper {
+impl Completer for HerHelper {
     type Candidate = Pair;
 
     fn complete(
@@ -53,7 +55,7 @@ impl Completer for PuaHelper {
     }
 }
 
-impl Hinter for PuaHelper {
+impl Hinter for HerHelper {
     type Hint = String;
 
     fn hint(&self, line: &str, pos: usize, ctx: &Context) -> Option<String> {
@@ -61,7 +63,7 @@ impl Hinter for PuaHelper {
     }
 }
 
-impl Highlighter for PuaHelper {
+impl Highlighter for HerHelper {
     fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
         &'s self,
         prompt: &'p str,
@@ -87,7 +89,7 @@ impl Highlighter for PuaHelper {
     }
 }
 
-impl Validator for PuaHelper {
+impl Validator for HerHelper {
     fn validate(
         &self,
         ctx: &mut validate::ValidationContext,
@@ -147,7 +149,7 @@ fn main() {
         .completion_type(CompletionType::List)
         .edit_mode(EditMode::Emacs)
         .build();
-    let h = PuaHelper {
+    let h = HerHelper {
         env: evaluator.env.clone(),
         highlighter: MatchingBracketHighlighter::new(),
         hinter: HistoryHinter {},
@@ -157,11 +159,11 @@ fn main() {
     rl.set_helper(Some(h));
     rl.bind_sequence(KeyEvent::alt('n'), Cmd::HistorySearchForward);
     rl.bind_sequence(KeyEvent::alt('p'), Cmd::HistorySearchBackward);
-    if rl.load_history("pua_history.txt").is_err() {
+    if rl.load_history("herlang_history.txt").is_err() {
         println!("No previous history.");
     }
 
-    println!("Hello! This is the PUA programming language!");
+    println!("Hello! This is the HER programming language!");
     println!("Feel free to type in commands\n");
 
     loop {
@@ -191,6 +193,6 @@ fn main() {
                 println!("Error: {:?}", err);
             }
         }
-        rl.append_history("pua_history.txt");
+        rl.append_history("herlang_history.txt");
     }
 }

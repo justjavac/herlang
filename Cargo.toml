@@ -1,9 +1,9 @@
 cargo-features = ["named-profiles"]
 
 [package]
-name = "pua-lang"
+name = "herlang"
 version = "0.1.0"
-authors = ["flaneur <me.ssword@gmail.com>"]
+authors = ["迷渡 <justjavac@gmail.com>"]
 
 [dependencies]
 rustyline = { version = "8.0.0", optional = true }
@@ -12,7 +12,7 @@ unicode-xid = { version = "0.2.1" }
 unicode-normalization = "0.1.8"
 
 [[bin]]
-name = "pua-lang"
+name = "herlang"
 path = "src/bin/main.rs"
 required-features = ["binaries"]
 
@@ -24,6 +24,8 @@ required-features = ["wasm"]
 [features]
 binaries = ["rustyline", "rustyline-derive"]
 wasm = []
+rustyline = ["dep:rustyline"]
+rustyline-derive = ["dep:rustyline-derive"]
 
 [profile.release]
 lto = true

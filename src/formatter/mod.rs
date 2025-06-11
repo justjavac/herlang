@@ -13,6 +13,12 @@ pub struct Formatter {
     config: FormatConfig,
 }
 
+impl Default for Formatter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Formatter {
     pub fn new() -> Self {
         Formatter {
@@ -118,13 +124,13 @@ impl Formatter {
 
     fn format_let_stmt(&mut self, ident: Ident, expr: Expr) -> String {
         let ident_str = self.format_ident_expr(ident);
-        let result = format!("let {} = ", ident_str);
+        let result = format!("let {ident_str} = ");
 
         self.column += result.len();
 
         let expr_str = self.format_expr(expr, Precedence::Lowest);
 
-        format!("{}{};", result, expr_str)
+        format!("{result}{expr_str};")
     }
 
     fn format_return_stmt(&mut self, expr: Expr) -> String {
@@ -215,7 +221,7 @@ impl Formatter {
                     result.push_str(&format!("\n{}", self.indent_str(0)));
                 }
             } else if i > 0 {
-                result.push_str(&format!(", {}", expr_str));
+                result.push_str(&format!(", {expr_str}"));
             } else {
                 result.push_str(&expr_str);
             }
@@ -225,7 +231,7 @@ impl Formatter {
             return self.format_array_literal(original, true);
         }
 
-        format!("[{}]", result)
+        format!("[{result}]")
     }
 
     fn format_hash_literal(&mut self, hash: Vec<(Expr, Expr)>, wrap: bool) -> String {
@@ -268,7 +274,7 @@ impl Formatter {
                     result.push_str(", ");
                 }
 
-                result.push_str(&format!("{}: {}", key_str, value_str));
+                result.push_str(&format!("{key_str}: {value_str}"));
 
                 if i + 1 == total {
                     result.push(' ');
@@ -280,7 +286,7 @@ impl Formatter {
             return self.format_hash_literal(original, true);
         }
 
-        format!("{{{}}}", result)
+        format!("{{{result}}}")
     }
 
     fn format_infix_expr(
@@ -295,23 +301,23 @@ impl Formatter {
         let right_str = self.format_expr(*right, current_precedence.clone());
 
         if precedence > current_precedence {
-            format!("({} {} {})", left_str, infix, right_str)
+            format!("({left_str} {infix} {right_str})")
         } else {
-            format!("{} {} {}", left_str, infix, right_str)
+            format!("{left_str} {infix} {right_str}")
         }
     }
 
     fn format_prefix_expr(&mut self, prefix: Prefix, right: Box<Expr>) -> String {
         let right_str = self.format_expr(*right, Precedence::Prefix);
 
-        format!("{}{}", prefix, right_str)
+        format!("{prefix}{right_str}")
     }
 
     fn format_index_expr(&mut self, left: Box<Expr>, index: Box<Expr>) -> String {
         let left_str = self.format_expr(*left, Precedence::Lowest);
         let index_str = self.format_expr(*index, Precedence::Lowest);
 
-        format!("{}[{}]", left_str, index_str)
+        format!("{left_str}[{index_str}]")
     }
 
     fn format_if_expr(
@@ -331,16 +337,12 @@ impl Formatter {
                 let alternative_str = self.format_block_stmt(alternative_expr);
                 let indent_str = self.indent_str(-1);
                 format!(
-                    "if ({}) {{\n{}\n{}}} else {{\n{}\n{}}}",
-                    cond_str, consequence_str, indent_str, alternative_str, indent_str,
+                    "if ({cond_str}) {{\n{consequence_str}\n{indent_str}}} else {{\n{alternative_str}\n{indent_str}}}",
                 )
             }
             None => {
                 let indent_str = self.indent_str(-1);
-                format!(
-                    "if ({}) {{\n{}\n{}}}",
-                    cond_str, consequence_str, indent_str
-                )
+                format!("if ({cond_str}) {{\n{consequence_str}\n{indent_str}}}")
             }
         };
 
@@ -357,10 +359,7 @@ impl Formatter {
         let indent_str = self.indent_str(-1);
         self.indent -= 1;
 
-        let result = format!(
-            "while ({}) {{\n{}\n{}}}",
-            cond_str, consequence_str, indent_str
-        );
+        let result = format!("while ({cond_str}) {{\n{consequence_str}\n{indent_str}}}");
         result
     }
 
@@ -401,7 +400,7 @@ impl Formatter {
             args_str.push_str(&self.format_expr(arg, Precedence::Lowest));
         }
 
-        format!("{}({})", func_str, args_str)
+        format!("{func_str}({args_str})")
     }
 }
 

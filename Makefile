@@ -15,14 +15,14 @@ test:
 build_repl:
 	cargo build --release
 
-build_wasm: web/src/pua-lang.wasm
+build_wasm: web/src/herlang.wasm
 
-web/src/pua-lang.wasm: target/wasm32-unknown-unknown/tiny/wasm.wasm
+web/src/herlang.wasm: target/wasm32-unknown-unknown/tiny/wasm.wasm
 	if command -v wasm-opt >/dev/null; then \
-		wasm-opt --strip-debug -Oz -o web/src/pua-lang.wasm target/wasm32-unknown-unknown/tiny/wasm.wasm; \
+		wasm-opt --strip-debug -Oz -o web/src/herlang.wasm target/wasm32-unknown-unknown/tiny/wasm.wasm; \
 	else \
 		printf '⚠  %s\n' "wasm-opt (binaryen) not found: binary will be larger than normal." >&2; \
-	    cp target/wasm32-unknown-unknown/tiny/wasm.wasm web/src/pua-lang.wasm; \
+	    cp target/wasm32-unknown-unknown/tiny/wasm.wasm web/src/herlang.wasm; \
 	fi
 
 target/wasm32-unknown-unknown/tiny/wasm.wasm: FORCE
@@ -37,4 +37,4 @@ web_deploy:
 
 .PHONY: repl
 repl:
-	cargo run --bin pua-lang --features="binaries"
+	cargo run --bin herlang --features="binaries"

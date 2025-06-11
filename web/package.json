@@ -7,7 +7,7 @@
     "deploy": "gh-pages -d dist",
     "predeploy": "yarn build"
   },
-  "author": "tsuyoshiwada",
+  "author": "justjavac",
   "license": "MIT",
   "devDependencies": {
     "codemirror": "^5.39.2",
