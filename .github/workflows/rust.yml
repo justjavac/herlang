@@ -27,4 +27,10 @@ jobs:
         run: cargo clippy
 
       - name: Test
-        run: make test
+        run: make test --locked
+
+      - name: Build release
+        run: cargo build --release --locked
+
+      - name: Build wasm
+        run: cargo build --bin wasm -Z unstable-options --profile tiny --target wasm32-unknown-unknown --features=wasm
