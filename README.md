@@ -1,8 +1,6 @@
 # herlang
 
-> herlang 编程语言，使用 Rust 编写。
-
-## 致谢
+> herlang 小仙女编程语言，使用 Rust 编写。
 
 感谢以下项目：
 
