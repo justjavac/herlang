@@ -161,7 +161,7 @@ fib(10);
 **示例：**
 
 ```
-"Monkey Programming Language";
+"Her Programming Language";
 "Hello" + " " + "World";
 ```
 
