@@ -140,12 +140,9 @@ impl Evaluator {
                 }
             }
             Expr::Index(left_expr, index_expr) => {
-                let left = self.eval_expr(left_expr);
-                let index = self.eval_expr(index_expr);
-                if left.is_some() && index.is_some() {
-                    Some(self.eval_index_expr(left.unwrap(), index.unwrap()))
-                } else {
-                    None
+                match (self.eval_expr(left_expr), self.eval_expr(index_expr)) {
+                    (Some(left), Some(index)) => Some(self.eval_index_expr(left, index)),
+                    _ => None,
                 }
             }
             Expr::If {
