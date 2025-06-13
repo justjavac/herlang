@@ -8,7 +8,7 @@ pub mod unescape;
 
 /// All variable names are nfc-normaized.
 pub fn nfc_normalize(string: &str) -> String {
-    use self::unicode_normalization::{is_nfc_quick, IsNormalized, UnicodeNormalization};
+    use self::unicode_normalization::{IsNormalized, UnicodeNormalization, is_nfc_quick};
     match is_nfc_quick(string.chars()) {
         IsNormalized::Yes => String::from(string),
         _ => {

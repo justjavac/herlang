@@ -4,22 +4,22 @@ extern crate rustyline;
 #[cfg(feature = "binaries")]
 extern crate rustyline_derive;
 
+use herlang::evaluator::Evaluator;
 use herlang::evaluator::builtins::new_builtins;
 use herlang::evaluator::env::Env;
-use herlang::evaluator::Evaluator;
-use herlang::lexer::{is_whitespace, Lexer};
+use herlang::lexer::{Lexer, is_whitespace};
 use herlang::parser::{ParseError, Parser};
 use herlang::token::Token;
 use std::borrow::Cow::{self, Borrowed, Owned};
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use rustyline::KeyEvent;
 use rustyline::completion::{Completer, Pair};
 use rustyline::error::ReadlineError;
 use rustyline::highlight::{CmdKind, Highlighter, MatchingBracketHighlighter};
 use rustyline::hint::{Hinter, HistoryHinter};
 use rustyline::validate::{self, Validator};
-use rustyline::KeyEvent;
 use rustyline::{Cmd, CompletionType, Config, Context, EditMode, Editor};
 use rustyline_derive::Helper;
 

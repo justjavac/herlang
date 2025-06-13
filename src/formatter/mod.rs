@@ -147,9 +147,9 @@ impl Formatter {
             Expr::Literal(literal) => self.format_literal(literal),
             Expr::Prefix(prefix, right) => self.format_prefix_expr(prefix, *right),
             Expr::Infix(infix, left, right) => {
-                self.format_infix_expr(infix, *left,* right, precedence)
+                self.format_infix_expr(infix, *left, *right, precedence)
             }
-            Expr::Index(left, index) => self.format_index_expr(*left,* index),
+            Expr::Index(left, index) => self.format_index_expr(*left, *index),
             Expr::If {
                 cond,
                 consequence,
@@ -489,14 +489,8 @@ mod tests {
   "124567890124567890124567890124567890124567890124567890124567890124567890124567890"
 ];"#,
             ),
-            (
-                "{      \"key\"   : \"value\"}",
-                "{ \"key\": \"value\" };",
-            ),
-            (
-                "{1:1, 2:2, 3:3}",
-                "{ 1: 1, 2: 2, 3: 3 };",
-            ),
+            ("{      \"key\"   : \"value\"}", "{ \"key\": \"value\" };"),
+            ("{1:1, 2:2, 3:3}", "{ 1: 1, 2: 2, 3: 3 };"),
             (
                 "{1:1, 2:2, 3:3, 4:4}",
                 r#"{
@@ -527,10 +521,7 @@ mod tests {
                 "let    test        =    \"string\"",
                 "let test = \"string\";",
             ),
-            (
-                "let   hoge =[0,1, 2 ,3  ]",
-                "let hoge = [0, 1, 2, 3];",
-            ),
+            ("let   hoge =[0,1, 2 ,3  ]", "let hoge = [0, 1, 2, 3];"),
             (
                 "let abcdefghij = [12345678, 12345678, 12345678, 12345678, 12345678, 12345678, 1234];",
                 r#"let abcdefghij = [
@@ -547,7 +538,7 @@ mod tests {
                 "let aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = {\"fooo\": \"abcdefg\"};",
                 r#"let aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = {
   "fooo": "abcdefg"
-};"#
+};"#,
             ),
         ];
 
@@ -561,9 +552,12 @@ mod tests {
         let tests = vec![
             ("return   100", "return 100;"),
             ("return [100,100]", "return [100, 100];"),
-            ("return [\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]", r#"return [
+            (
+                "return [\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+                r#"return [
   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-];"#),
+];"#,
+            ),
         ];
 
         for (input, expect) in tests {

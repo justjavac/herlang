@@ -1,10 +1,10 @@
 extern crate herlang;
 
 use herlang::ast::Program;
+use herlang::evaluator::Evaluator;
 use herlang::evaluator::builtins::new_builtins;
 use herlang::evaluator::env::Env;
 use herlang::evaluator::object::Object;
-use herlang::evaluator::Evaluator;
 use herlang::formatter::Formatter;
 use herlang::lexer::Lexer;
 use herlang::parser::Parser;

@@ -1,7 +1,7 @@
 use crate::ast::*;
 use crate::lexer::Lexer;
-use std::fmt;
 use crate::token::Token;
+use std::fmt;
 
 #[derive(Debug, Clone)]
 pub enum ParseError {

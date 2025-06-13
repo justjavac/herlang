@@ -131,7 +131,9 @@ impl Evaluator {
                 .eval_expr(right_expr)
                 .map(|right| self.eval_prefix_expr(prefix, right)),
             Expr::Infix(infix, left_expr, right_expr) => {
-                if let (Some(left), Some(right)) = (self.eval_expr(left_expr), self.eval_expr(right_expr)) {
+                if let (Some(left), Some(right)) =
+                    (self.eval_expr(left_expr), self.eval_expr(right_expr))
+                {
                     Some(self.eval_infix_expr(infix, left, right))
                 } else {
                     None
@@ -789,7 +791,7 @@ identity(100);
             (
                 "let divise = fn(x, y) { x / y; }; divise(10, 5);",
                 Some(Object::Int(2)),
-            )
+            ),
         ];
 
         for (input, expect) in tests {
