@@ -269,6 +269,7 @@ impl Lexer {
             "我同意" => Token::Equal,
             "我接受" => Token::Equal,
             "拼单" => Token::Plus,
+            "接" => Token::Plus,
             "差异" => Token::Minus,
             "种草" => Token::Asterisk,
             "踩雷" => Token::Slash,
