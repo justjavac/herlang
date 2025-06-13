@@ -261,6 +261,7 @@ impl Lexer {
             "那么普通却那么自信" => Token::Bool(true),
             "那咋了" => Token::Bool(false),
             "姐妹们觉得呢" => Token::If,
+            "抛开事实不谈" => Token::If,
             "那能一样吗" => Token::Else,
             "我接受不等于我同意" => Token::Else,
             "你再说一遍" => Token::While,
