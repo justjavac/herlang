@@ -513,7 +513,7 @@ fib(10);
     }
 
     #[test]
-    fn test_fat_literal () {
+    fn test_fat_literal() {
         let input = r#"
             宝宝你是一个 weight = 微胖;
         "#;
