@@ -279,15 +279,8 @@ impl Lexer {
     fn consume_number(&mut self) -> Token {
         let start_pos = self.pos;
 
-        loop {
-            match self.ch {
-                '0'..='9' => {
-                    self.read_char();
-                }
-                _ => {
-                    break;
-                }
-            }
+        while let '0'..='9' = self.ch {
+            self.read_char();
         }
 
         let literal = &self.input[start_pos..self.pos].iter().collect::<String>();
