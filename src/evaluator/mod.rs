@@ -293,6 +293,7 @@ impl Evaluator {
         )
     }
 
+    #[allow(clippy::mutable_key_type)]
     fn eval_hash_literal(&mut self, pairs: &[(Expr, Expr)]) -> Object {
         let mut hash = HashMap::new();
 
