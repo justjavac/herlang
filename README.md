@@ -41,7 +41,7 @@ make repl
 | -      | 差异                          |
 | *      | 种草                          |
 | /      | 扫雷                          |
-| output | 输出                          |
+| output | 小作文                        |
 | quit   | 哼                            |
 
 ### 语法概览
@@ -163,7 +163,7 @@ fib(10);
 **示例：**
 
 ```
-"Monkey Programming Language";
+"Her Programming Language";
 "Hello" + " " + "World";
 ```
 
