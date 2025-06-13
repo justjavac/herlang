@@ -1,6 +1,6 @@
-extern crate unicode_normalization;
 /// Unicode lexer for the HER language.
 /// Some functions taken from `rust/compiler/rustc_lexer/src/lib.rs`.
+extern crate unicode_normalization;
 extern crate unicode_xid;
 use crate::token::Token;
 
@@ -20,79 +20,39 @@ pub fn nfc_normalize(string: &str) -> String {
 
 /// True if `c` is considered a whitespace according to HER. Does not include \n.
 pub fn is_whitespace(c: char) -> bool {
-    // This is Pattern_White_Space minus \n.
-    //
-    // Note that this set is stable (ie, it doesn't change with different
-    // Unicode versions), so it's ok to just hard-code the values.
-
     matches!(
         c,
-        // Usual ASCII suspects
-        '\u{0009}'   // \t
-        | '\u{000C}' // form feed
-        | '\u{000D}' // \r
-        | '\u{000B}' // vertical tab
-        | '\u{0020}' // space
-
-        // NEXT LINE from latin1
-        | '\u{0085}'
-
-        // Bidi markers
-        | '\u{200E}' // LEFT-TO-RIGHT MARK
-        | '\u{200F}' // RIGHT-TO-LEFT MARK
-
-        // Dedicated whitespace characters from Unicode
-        | '\u{2028}' // LINE SEPARATOR
-        | '\u{2029}' // PARAGRAPH SEPARATOR
+        '\u{0009}' | '\u{000C}' | '\u{000D}' | '\u{000B}' | '\u{0020}' | '\u{0085}'
+            | '\u{200E}' | '\u{200F}' | '\u{2028}' | '\u{2029}'
     )
 }
 
 /// Decide whether character may show up in emoji.
-/// We cannot validate the entire sequence given the current architecture.
 fn is_emoji_like(c: char) -> bool {
     if c < '\x7f' {
         false
     } else {
-        // ZWJ
-        c == '\u{200D}'
-        // VS15, 16
-        || c == '\u{fe0f}' || c == '\u{fe0e}'
-        // Big SMP chunk (includes modifiers and by accident chess)
-        || ('\u{1f000}'..='\u{1faff}').contains(&c)
-        // The BMP parts that follow are actually quite questionable
-        || c == '\u{2139}'
-        // (unstable!) Arrows, not sure if we will repocess them for operators!
-        || ('\u{2190}'..='\u{21FF}').contains(&c)
-        || ('\u{2300}'..='\u{23FF}').contains(&c)
-        || ('\u{25A0}'..='\u{25FF}').contains(&c)
-        || ('\u{2600}'..='\u{26FF}').contains(&c)
-        // (unstable!) Dingbats, some are unfortunately punctuations
-        || ('\u{2700}'..='\u{27FF}').contains(&c)
-        // Too lazy to do 2800-329f, will come back later
+        c == '\u{200D}' || c == '\u{fe0f}' || c == '\u{fe0e}'
+            || ('\u{1f000}'..='\u{1faff}').contains(&c)
+            || c == '\u{2139}'
+            || ('\u{2190}'..='\u{21FF}').contains(&c)
+            || ('\u{2300}'..='\u{23FF}').contains(&c)
+            || ('\u{25A0}'..='\u{25FF}').contains(&c)
+            || ('\u{2600}'..='\u{26FF}').contains(&c)
+            || ('\u{2700}'..='\u{27FF}').contains(&c)
     }
 }
 
 /// True if `c` is valid as a first character of an identifier.
-/// Compared to Rust, we additionally allow $ and ¥.
 fn is_id_start(c: char) -> bool {
-    c.is_ascii_lowercase()
-        || c.is_ascii_uppercase()
-        || c == '_'
-        || c == '$'
-        || c == '¥'
+    c.is_ascii_alphabetic() || c == '_' || c == '$' || c == '¥'
         || (c > '\x7f' && unicode_xid::UnicodeXID::is_xid_start(c))
         || is_emoji_like(c)
 }
 
 /// True if `c` is valid as a non-first character of an identifier.
-/// Compared to Rust, we additionally allow $ and ¥.
 fn is_id_continue(c: char) -> bool {
-    c.is_ascii_lowercase()
-        || c.is_ascii_uppercase()
-        || c.is_ascii_digit()
-        || c == '_'
-        || c == '$'
-        || c == '¥'
+    c.is_ascii_alphanumeric() || c == '_' || c == '$' || c == '¥'
         || (c > '\x7f' && unicode_xid::UnicodeXID::is_xid_continue(c))
         || is_emoji_like(c)
 }
@@ -145,6 +105,8 @@ impl Lexer {
         loop {
             if is_whitespace(self.ch) {
                 self.read_char();
+            } else if self.ch == '\n' {
+                self.read_char();
             } else {
                 break;
             }
@@ -153,6 +115,47 @@ impl Lexer {
 
     pub fn next_token(&mut self) -> Token {
         self.skip_whitespace();
+
+        if self.ch == '其' {
+            let mut comment = String::new();
+            comment.push(self.ch);
+            self.read_char();
+
+            if self.ch == '其' {
+                self.read_char();
+                if self.ch == '其' {
+                    self.read_char();
+                    if self.ch == '其' {
+                        self.read_char();
+                        if self.ch == '其' {
+                            self.read_char();
+                            if self.ch == '其' {
+                                self.read_char();
+                                if self.ch == '其' {
+                                    self.read_char();
+                                    if self.ch == '其' {
+                                        self.read_char();
+                                        if self.ch == '其' {
+                                            self.read_char();
+                                            if self.ch == '其' {
+                                                self.read_char();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            while self.ch != '\n' && self.ch != '\0' {
+                comment.push(self.ch);
+                self.read_char();
+            }
+
+            return Token::Comment(comment);
+        }
 
         let tok = match self.ch {
             '=' => {
@@ -207,14 +210,7 @@ impl Lexer {
             '"' => {
                 return self.consume_string();
             }
-            '\n' => {
-                if self.nextch_is('\n') {
-                    Token::Blank
-                } else {
-                    self.read_char();
-                    return self.next_token();
-                }
-            }
+            '\n' => Token::Blank,
             '\0' => Token::Eof,
             _ => {
                 if is_id_start(self.ch) {
@@ -273,6 +269,7 @@ impl Lexer {
             "差异" => Token::Minus,
             "种草" => Token::Asterisk,
             "踩雷" => Token::Slash,
+            "" => Token::Ident(nfc_normalize(&literal)),
             _ => Token::Ident(nfc_normalize(&literal)),
         }
     }
@@ -313,7 +310,6 @@ impl Lexer {
             }
             self.read_char();
         }
-        // FIXME: Make Lexer faliable
         Token::String("<Lexer error: string: premature EOF>".to_string())
     }
 }
@@ -351,8 +347,8 @@ if (5 < 10) {
 
 [1, 2];
 
-
 {"foo": "bar"};
+其实我觉得 这是一个注释
 "#;
 
         let tests = vec![
@@ -460,6 +456,7 @@ if (5 < 10) {
             Token::String(String::from("bar")),
             Token::Rbrace,
             Token::Semicolon,
+            Token::Comment(String::from("其实我觉得 这是一个注释")),
             Token::Eof,
         ];
 
@@ -488,6 +485,7 @@ if (5 < 10) {
 };
 
 fib(10);
+其实我觉得 这是一个注释
 "#;
 
         let tests = vec![
@@ -499,6 +497,8 @@ fib(10);
             Token::Ident(String::from("n")),
             Token::Rparen,
             Token::Lbrace,
+            Token::Comment(String::from("其实我觉得 这是一个注释")),
+            Token::Eof,
         ];
 
         let mut lexer = Lexer::new(input);
