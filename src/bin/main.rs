@@ -16,7 +16,7 @@ use std::rc::Rc;
 
 use rustyline::completion::{Completer, Pair};
 use rustyline::error::ReadlineError;
-use rustyline::highlight::{Highlighter, MatchingBracketHighlighter};
+use rustyline::highlight::{CmdKind, Highlighter, MatchingBracketHighlighter};
 use rustyline::hint::{Hinter, HistoryHinter};
 use rustyline::validate::{self, Validator};
 use rustyline::KeyEvent;
@@ -84,8 +84,8 @@ impl Highlighter for HerHelper {
         self.highlighter.highlight(line, pos)
     }
 
-    fn highlight_char(&self, line: &str, pos: usize) -> bool {
-        self.highlighter.highlight_char(line, pos)
+    fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
+        self.highlighter.highlight_char(line, pos, kind)
     }
 }
 
@@ -140,7 +140,7 @@ pub fn extract_word<'l>(line: &'l str, pos: usize) -> (usize, &'l str) {
 }
 
 // ---- Main ----
-fn main() {
+fn main() -> rustyline::Result<()> {
     let env = Env::from(new_builtins());
     let mut evaluator = Evaluator::new(Rc::new(RefCell::new(env)));
 
@@ -155,7 +155,7 @@ fn main() {
         hinter: HistoryHinter {},
         colored_prompt: "\x1b[32m>>\x1b[0m ".to_owned(),
     };
-    let mut rl = Editor::with_config(config);
+    let mut rl = Editor::with_config(config)?;
     rl.set_helper(Some(h));
     rl.bind_sequence(KeyEvent::alt('n'), Cmd::HistorySearchForward);
     rl.bind_sequence(KeyEvent::alt('p'), Cmd::HistorySearchBackward);
@@ -169,7 +169,7 @@ fn main() {
     loop {
         match rl.readline(">> ") {
             Ok(line) => {
-                rl.add_history_entry(&line);
+                rl.add_history_entry(&line)?;
 
                 let mut parser = Parser::new(Lexer::new(&line));
                 let program = parser.parse();
@@ -193,6 +193,7 @@ fn main() {
                 println!("Error: {:?}", err);
             }
         }
-        rl.append_history("herlang_history.txt");
     }
+
+    rl.append_history("herlang_history.txt")
 }
