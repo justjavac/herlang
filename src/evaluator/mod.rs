@@ -131,10 +131,8 @@ impl Evaluator {
                 .eval_expr(right_expr)
                 .map(|right| self.eval_prefix_expr(prefix, right)),
             Expr::Infix(infix, left_expr, right_expr) => {
-                let left = self.eval_expr(left_expr);
-                let right = self.eval_expr(right_expr);
-                if left.is_some() && right.is_some() {
-                    Some(self.eval_infix_expr(infix, left.unwrap(), right.unwrap()))
+                if let (Some(left), Some(right)) = (self.eval_expr(left_expr), self.eval_expr(right_expr)) {
+                    Some(self.eval_infix_expr(infix, left, right))
                 } else {
                     None
                 }
