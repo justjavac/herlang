@@ -637,16 +637,16 @@ let two = "two";
                 Some(Object::Int(4)),
             ),
             (
-                "我认为 i = 1; 你再说一遍 (i < 3) { 我认为 i = i + 1 }; i;",
+                "宝宝你是一个 i = 1; 你再说一遍 (i < 3) { 宝宝你是一个 i = i + 1 }; i;",
                 Some(Object::Int(3)),
             ),
             ("你再说一遍 (4 < 3) { 3 };", None),
             (
-                "我认为 i = 1; 你再说一遍 (i < 3) { 我认为 i = i+1; i}",
+                "宝宝你是一个 i = 1; 你再说一遍 (i < 3) { 宝宝你是一个 i = i+1; i}",
                 Some(Object::Int(3)),
             ),
             (
-                "我认为 i = 0; 我认为 j = 0; 你再说一遍 (i < 5) { 我认为 i = i + 1; if (i == 2) { 下头; } 我认为 j = j + 1; }; j;",
+                "宝宝你是一个 i = 0; 宝宝你是一个 j = 0; 你再说一遍 (i < 5) { 宝宝你是一个 i = i + 1; if (i == 2) { 下头; } 宝宝你是一个 j = j + 1; }; j;",
                 Some(Object::Int(1)),
             ),
         ];
@@ -760,11 +760,11 @@ identity(100);
                 Some(Object::String("herllo".to_string())),
             ),
             (
-                "我认为 herllo = fn() { return \"herllo\"; }; herllo();",
-                Some(Object::String("herllo".to_string())),
+                "宝宝你是一个 herllo = fn() { return \"hello\"; }; herllo();",
+                Some(Object::String("hello".to_string())),
             ),
             (
-                "我认为 fib = 想要你一个态度(n) { 姐妹们觉得呢 (n 我接受 0) { 反手举报 0; }; 姐妹们觉得呢 (n 我接受 1) { 反手举报 1; }; 反手举报 fib(n-1) + fib(n-2); }; fib(2);",
+                "宝宝你是一个 fib = 想要你一个态度(n) { 姐妹们觉得呢 (n 我接受 0) { 反手举报 0; }; 姐妹们觉得呢 (n 我接受 1) { 反手举报 1; }; 反手举报 fib(n-1) + fib(n-2); }; fib(2);",
                 Some(Object::Int(1)),
             ),
             (

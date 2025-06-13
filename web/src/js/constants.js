@@ -22,15 +22,15 @@ export const SNIPPETS = [
 
   {
     label: "拼单",
-    value: `我认为 爱马仕 = 10;
-我认为 LV = 15;
+    value: `宝宝你是一个 爱马仕 = 10;
+宝宝你是一个 LV = 15;
 
 爱马仕 拼单 LV;`,
   },
 
   {
     label: "我接受不等于我同意",
-    value: `我认为 factorial = 想要你一个态度(n) {
+    value: `宝宝你是一个 factorial = 想要你一个态度(n) {
   姐妹们觉得呢 (n 我接受 0) {
     反手举报 1
   } 我接受不等于我同意 {
