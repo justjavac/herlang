@@ -65,12 +65,12 @@ jobs:
           cargo build --bin wasm -Z unstable-options --profile tiny --target wasm32-unknown-unknown --features=wasm
 
       - name: Pre-release (linux)
-        if: startsWith(matrix.os, 'ubuntu')
+        if: matrix.os == 'ubuntu-latest'
         run: zip -r herlang-x86_64-unknown-linux-gnu.zip herlang
         working-directory: target/release
 
       - name: Pre-release (linux-aarch64)
-        if: startsWith(matrix.os, 'ubuntu')
+        if:  matrix.os == 'ubuntu-24.04-arm'
         run: zip -r herlang-aarch64-unknown-linux-gnu.zip herlang
         working-directory: target/release
 
