@@ -425,13 +425,12 @@ impl Parser {
     fn parse_dot_access_expr(&mut self, left: Expr) -> Option<Expr> {
         self.bump();
 
-        match self.parse_ident() {
-            Some(Ident(str)) => Some(Expr::Index(
+        self.parse_ident().map(|Ident(str)| {
+            Expr::Index(
                 Box::new(left),
                 Box::new(Expr::Literal(Literal::String(str))),
-            )),
-            None => None,
-        }
+            )
+        })
     }
 
     fn parse_grouped_expr(&mut self) -> Option<Expr> {
