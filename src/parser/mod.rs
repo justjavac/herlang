@@ -426,13 +426,10 @@ impl Parser {
         self.bump();
 
         match self.parse_ident() {
-            Some(name) => match name {
-                Ident(str) => Some(Expr::Index(
-                    Box::new(left),
-                    Box::new(Expr::Literal(Literal::String(str))),
-                )),
-                _ => None,
-            },
+            Some(Ident(str)) => Some(Expr::Index(
+                Box::new(left),
+                Box::new(Expr::Literal(Literal::String(str))),
+            )),
             None => None,
         }
     }
