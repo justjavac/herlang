@@ -338,11 +338,7 @@ impl Evaluator {
     fn eval_while_expr(&mut self, cond: &Expr, consequence: &BlockStmt) -> Option<Object> {
         let mut result: Option<Object> = None;
 
-        loop {
-            let cond_result = match self.eval_expr(cond) {
-                Some(cond) => cond,
-                None => break,
-            };
+        while let Some(cond_result) = self.eval_expr(cond) {
             if !Self::is_truthy(cond_result.clone()) {
                 break;
             }
