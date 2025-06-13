@@ -16,8 +16,8 @@ use std::rc::Rc;
 
 fn main() {}
 
-extern "C" {
-    fn print(input_ptr: *mut c_char);
+unsafe extern "C" {
+    unsafe fn print(input_ptr: *mut c_char);
 }
 
 fn internal_print(msg: &str) {
@@ -47,7 +47,7 @@ fn parse(input: &str) -> Result<Program, String> {
     Ok(program)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn alloc(size: usize) -> *mut c_void {
     let mut buf = Vec::with_capacity(size);
     let ptr = buf.as_mut_ptr();
@@ -55,7 +55,7 @@ pub fn alloc(size: usize) -> *mut c_void {
     ptr as *mut c_void
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn dealloc(ptr: *mut c_void, size: usize) {
     // Clear memory to zero for security purposes (optional).
     if !ptr.is_null() && size > 0 {
@@ -66,7 +66,7 @@ pub fn dealloc(ptr: *mut c_void, size: usize) {
     // The memory deallocation is deferred to the caller (e.g., via `free`).
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn eval(input_ptr: *mut c_char) -> *mut c_char {
     let input = unsafe { CStr::from_ptr(input_ptr).to_string_lossy().into_owned() };
     let program = match parse(&input) {
@@ -93,7 +93,7 @@ pub fn eval(input_ptr: *mut c_char) -> *mut c_char {
     string_to_ptr(output)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn format(input_ptr: *mut c_char) -> *mut c_char {
     let input = unsafe { CStr::from_ptr(input_ptr).to_string_lossy().into_owned() };
     let program = match parse(&input) {
