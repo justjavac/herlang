@@ -20,6 +20,7 @@ pub fn new_builtins() -> HashMap<String, Object> {
 
     // Aba-aba builtins
     builtins.insert(String::from("哼"), Object::Builtin(-1, her_quit));
+    builtins.insert(String::from("哈"), Object::Builtin(-1, her_quit));
     builtins.insert(String::from("小作文"), Object::Builtin(-1, her_output));
     builtins.insert(String::from("聚焦"), Object::Builtin(1, her_print));
     builtins.insert(String::from("复用"), Object::Builtin(1, her_repr));
