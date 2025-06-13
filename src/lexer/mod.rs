@@ -270,6 +270,8 @@ impl Lexer {
             "我接受" => Token::Equal,
             "拼单" => Token::Plus,
             "差异" => Token::Minus,
+            "种草" => Token::Asterisk,
+            "踩雷" => Token::Slash,
             _ => Token::Ident(nfc_normalize(&literal)),
         }
     }
