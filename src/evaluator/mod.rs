@@ -819,7 +819,7 @@ addTwo(2);
             // len
             ("len(\"\")", Some(Object::Int(0))),
             ("len(\"four\")", Some(Object::Int(4))),
-            ("len(\"herllo world\")", Some(Object::Int(11))),
+            ("len(\"herllo world\")", Some(Object::Int(12))),
             ("len([1, 2, 3])", Some(Object::Int(3))),
             (
                 "len(1)",
