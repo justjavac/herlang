@@ -22,7 +22,7 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Check
-        run: cargo check --locked
+        run: cargo check --features="binaries" --locked
 
       - name: Clippy
         run: cargo clippy
@@ -31,7 +31,7 @@ jobs:
         run: cargo test --locked
 
       - name: Build release
-        run: cargo build --release --locked
+        run: cargo build --release --features="binaries" --locked
 
       - name: Build wasm
         run: |
