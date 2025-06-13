@@ -43,9 +43,6 @@ make repl
 | /      | 踩雷/避雷                     |
 | output | 小作文/家人们                 |
 | quit   | 哼/哈                         |
-| /      | 扫雷                          |
-| output | 小作文                        |
-| quit   | 哼                            |
 
 #### 常量
 | Monkey | herlang                       |
