@@ -257,7 +257,7 @@ impl Lexer {
             "return" => Token::Return,
             // HER Aba-aba keywords
             "想要你一个态度" => Token::Func,
-            "我认为" => Token::Let,
+            "宝宝你是一个" => Token::Let,
             "那么普通却那么自信" => Token::Bool(true),
             "那咋了" => Token::Bool(false),
             "姐妹们觉得呢" => Token::If,
@@ -474,7 +474,7 @@ if (5 < 10) {
     #[test]
     fn test_cjk_next_token() {
         let input = r#"
-我认为 fib = 想要你一个态度(n) {
+宝宝你是一个 fib = 想要你一个态度(n) {
   姐妹们觉得呢 (n 我接受 0) {
     反手举报 0;
   }
@@ -504,7 +504,7 @@ fib(10);
 
         for expect in tests {
             let tok = lexer.next_token();
-
+            dbg!(&tok);
             assert_eq!(expect, tok);
         }
     }
