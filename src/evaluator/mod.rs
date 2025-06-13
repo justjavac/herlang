@@ -365,7 +365,7 @@ impl Evaluator {
         result
     }
 
-    fn eval_call_expr(&mut self, func: &Box<Expr>, args: &Vec<Expr>) -> Object {
+    fn eval_call_expr(&mut self, func: &Expr, args: &[Expr]) -> Object {
         let args = args
             .iter()
             .map(|e| self.eval_expr(e).unwrap_or(Object::Null))

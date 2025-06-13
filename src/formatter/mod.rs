@@ -145,19 +145,19 @@ impl Formatter {
         match expr {
             Expr::Ident(ident) => self.format_ident_expr(ident),
             Expr::Literal(literal) => self.format_literal(literal),
-            Expr::Prefix(prefix, right) => self.format_prefix_expr(prefix, right),
+            Expr::Prefix(prefix, right) => self.format_prefix_expr(prefix, *right),
             Expr::Infix(infix, left, right) => {
-                self.format_infix_expr(infix, left, right, precedence)
+                self.format_infix_expr(infix, *left,* right, precedence)
             }
-            Expr::Index(left, index) => self.format_index_expr(left, index),
+            Expr::Index(left, index) => self.format_index_expr(*left,* index),
             Expr::If {
                 cond,
                 consequence,
                 alternative,
-            } => self.format_if_expr(cond, consequence, alternative),
-            Expr::While { cond, consequence } => self.format_while_expr(cond, consequence),
+            } => self.format_if_expr(*cond, consequence, alternative),
+            Expr::While { cond, consequence } => self.format_while_expr(*cond, consequence),
             Expr::Func { params, body } => self.format_func_expr(params, body),
-            Expr::Call { func, args } => self.format_call_expr(func, args),
+            Expr::Call { func, args } => self.format_call_expr(*func, args),
         }
     }
 
@@ -292,13 +292,13 @@ impl Formatter {
     fn format_infix_expr(
         &mut self,
         infix: Infix,
-        left: Box<Expr>,
-        right: Box<Expr>,
+        left: Expr,
+        right: Expr,
         precedence: Precedence,
     ) -> String {
         let current_precedence = Self::infix_to_precedence(&infix);
-        let left_str = self.format_expr(*left, current_precedence.clone());
-        let right_str = self.format_expr(*right, current_precedence.clone());
+        let left_str = self.format_expr(left, current_precedence.clone());
+        let right_str = self.format_expr(right, current_precedence.clone());
 
         if precedence > current_precedence {
             format!("({left_str} {infix} {right_str})")
@@ -307,26 +307,26 @@ impl Formatter {
         }
     }
 
-    fn format_prefix_expr(&mut self, prefix: Prefix, right: Box<Expr>) -> String {
-        let right_str = self.format_expr(*right, Precedence::Prefix);
+    fn format_prefix_expr(&mut self, prefix: Prefix, right: Expr) -> String {
+        let right_str = self.format_expr(right, Precedence::Prefix);
 
         format!("{prefix}{right_str}")
     }
 
-    fn format_index_expr(&mut self, left: Box<Expr>, index: Box<Expr>) -> String {
-        let left_str = self.format_expr(*left, Precedence::Lowest);
-        let index_str = self.format_expr(*index, Precedence::Lowest);
+    fn format_index_expr(&mut self, left: Expr, index: Expr) -> String {
+        let left_str = self.format_expr(left, Precedence::Lowest);
+        let index_str = self.format_expr(index, Precedence::Lowest);
 
         format!("{left_str}[{index_str}]")
     }
 
     fn format_if_expr(
         &mut self,
-        cond: Box<Expr>,
+        cond: Expr,
         consequence: BlockStmt,
         alternative: Option<BlockStmt>,
     ) -> String {
-        let cond_str = self.format_expr(*cond, Precedence::Lowest);
+        let cond_str = self.format_expr(cond, Precedence::Lowest);
 
         self.indent += 1;
 
@@ -351,8 +351,8 @@ impl Formatter {
         result
     }
 
-    fn format_while_expr(&mut self, cond: Box<Expr>, consequence: BlockStmt) -> String {
-        let cond_str = self.format_expr(*cond, Precedence::Lowest);
+    fn format_while_expr(&mut self, cond: Expr, consequence: BlockStmt) -> String {
+        let cond_str = self.format_expr(cond, Precedence::Lowest);
         self.indent += 1;
 
         let consequence_str = self.format_block_stmt(consequence);
@@ -388,8 +388,8 @@ impl Formatter {
         )
     }
 
-    fn format_call_expr(&mut self, func: Box<Expr>, args: Vec<Expr>) -> String {
-        let func_str = self.format_expr(*func, Precedence::Lowest);
+    fn format_call_expr(&mut self, func: Expr, args: Vec<Expr>) -> String {
+        let func_str = self.format_expr(func, Precedence::Lowest);
         let mut args_str = String::new();
 
         for (i, arg) in args.into_iter().enumerate() {
