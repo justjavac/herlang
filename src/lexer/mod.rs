@@ -275,6 +275,7 @@ impl Lexer {
             "种草" => Token::Asterisk,
             "踩雷" => Token::Slash,
             "避雷" => Token::Slash,
+            "微胖" => Token::String(String::from("180kg")),
             _ => Token::Ident(nfc_normalize(&literal)),
         }
     }
@@ -506,6 +507,26 @@ fib(10);
         let mut lexer = Lexer::new(input);
 
         for expect in tests {
+            let tok = lexer.next_token();
+            assert_eq!(expect, tok);
+        }
+    }
+
+    #[test]
+    fn test_fat_literal () {
+        let input = r#"
+            宝宝你是一个 weight = 微胖;
+        "#;
+        let tokens = vec![
+            Token::Let,
+            Token::Ident(String::from("weight")),
+            Token::Assign,
+            Token::String(String::from("180kg")),
+        ];
+
+        let mut lexer = Lexer::new(input);
+
+        for expect in tokens {
             let tok = lexer.next_token();
             dbg!(&tok);
             assert_eq!(expect, tok);
