@@ -13,7 +13,7 @@ test:
 
 .PHONY: build_repl
 build_repl:
-	cargo build --release
+	cargo build --release --features="binaries"
 
 build_wasm: web/src/herlang.wasm
 
