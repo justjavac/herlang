@@ -289,7 +289,7 @@ impl Evaluator {
         }
     }
 
-    fn eval_array_literal(&mut self, objects: &Vec<Expr>) -> Object {
+    fn eval_array_literal(&mut self, objects: &[Expr]) -> Object {
         Object::Array(
             objects
                 .iter()
@@ -298,7 +298,7 @@ impl Evaluator {
         )
     }
 
-    fn eval_hash_literal(&mut self, pairs: &Vec<(Expr, Expr)>) -> Object {
+    fn eval_hash_literal(&mut self, pairs: &[(Expr, Expr)]) -> Object {
         let mut hash = HashMap::new();
 
         for (key_expr, value_expr) in pairs {
