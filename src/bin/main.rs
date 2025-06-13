@@ -163,7 +163,7 @@ fn main() -> rustyline::Result<()> {
         println!("No previous history.");
     }
 
-    println!("Hello! This is the HER programming language!");
+    println!("Herllo! This is the HER programming language!");
     println!("Feel free to type in commands\n");
 
     loop {
