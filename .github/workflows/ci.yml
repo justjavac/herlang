@@ -3,11 +3,22 @@ name: ci
 on: [push, pull_request]
 
 env:
+  CARGO_INCREMENTAL: 0
+  RUST_BACKTRACE: full
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.kind }} ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - macOS-13  # Intel
+          - macOS-latest  # Apple Silicon
+          - windows-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -17,6 +28,21 @@ jobs:
           toolchain: nightly
           override: true
           components: rustfmt, clippy
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |-
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/*/.*
+            target/*/build
+            target/*/deps
+          key:
+            ${{ matrix.config.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            ${{ matrix.config.os }}-
 
       - name: Format
         run: cargo fmt --all -- --check
