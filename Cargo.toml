@@ -4,6 +4,7 @@ cargo-features = ["named-profiles"]
 name = "herlang"
 version = "0.1.0"
 authors = ["迷渡 <justjavac@gmail.com>"]
+edition = "2024"
 
 [dependencies]
 rustyline = { version = "16.0.0", optional = true }

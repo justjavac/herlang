@@ -1,4 +1,4 @@
-use evaluator::object::*;
+use crate::evaluator::object::*;
 use std::collections::HashMap;
 
 pub fn new_builtins() -> HashMap<String, Object> {
@@ -99,7 +99,7 @@ fn her_repr(args: Vec<Object>) -> Object {
 
 fn her_print(args: Vec<Object>) -> Object {
     match &args[0] {
-        Object::String(ref o) => {
+        Object::String(o) => {
             println!("{o}");
             Object::Null
         }

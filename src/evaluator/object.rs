@@ -1,8 +1,8 @@
 #![allow(clippy::derived_hash_with_manual_eq)]
 
-use ast::*;
-use evaluator::env::*;
-use lexer::unescape::escape_str;
+use crate::ast::*;
+use crate::evaluator::env::*;
+use crate::lexer::unescape::escape_str;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt;
@@ -58,7 +58,7 @@ impl fmt::Display for Object {
             }
             Object::Func(ref params, _, _) => {
                 let mut result = String::new();
-                for (i, Ident(ref s)) in params.iter().enumerate() {
+                for (i, Ident(s)) in params.iter().enumerate() {
                     if i < 1 {
                         result.push_str(&s.to_string());
                     } else {

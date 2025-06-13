@@ -1,7 +1,7 @@
-use ast::*;
-use lexer::Lexer;
+use crate::ast::*;
+use crate::lexer::Lexer;
 use std::fmt;
-use token::Token;
+use crate::token::Token;
 
 #[derive(Debug, Clone)]
 pub enum ParseError {
@@ -560,9 +560,9 @@ impl Parser {
 
 #[cfg(test)]
 mod tests {
-    use ast::*;
-    use lexer::Lexer;
-    use parser::Parser;
+    use crate::ast::*;
+    use crate::lexer::Lexer;
+    use crate::parser::Parser;
 
     fn check_parse_errors(parser: &mut Parser) {
         let errors = parser.get_errors();

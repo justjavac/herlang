@@ -1,6 +1,6 @@
 #![allow(clippy::if_same_then_else)]
-use ast::*;
-use lexer::unescape::escape_str;
+use crate::ast::*;
+use crate::lexer::unescape::escape_str;
 
 struct FormatConfig {
     max_line_length: usize,
@@ -406,9 +406,9 @@ impl Formatter {
 
 #[cfg(test)]
 mod tests {
-    use formatter::*;
-    use lexer::*;
-    use parser::*;
+    use crate::formatter::*;
+    use crate::lexer::*;
+    use crate::parser::*;
 
     fn format(input: &str) -> String {
         Formatter::new().format(Parser::new(Lexer::new(input)).parse())
