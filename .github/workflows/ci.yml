@@ -18,13 +18,16 @@ jobs:
         os:
           - ubuntu-latest
           - ubuntu-24.04-arm
-          - macOS-13  # Intel
-          - macOS-latest  # Apple Silicon
+          - macOS-13 # Intel
+          - macOS-latest # Apple Silicon
           - windows-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: nightly
@@ -32,7 +35,7 @@ jobs:
           components: rustfmt, clippy
 
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |-
             ~/.cargo/registry/index/
@@ -72,7 +75,7 @@ jobs:
         working-directory: target/release
 
       - name: Pre-release (linux-aarch64)
-        if:  matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-24.04-arm'
         run: zip -r herlang-aarch64-unknown-linux-gnu.zip herlang
         working-directory: target/release
 
@@ -90,7 +93,7 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         run: |
           Compress-Archive -CompressionLevel Optimal -Force -Path target/release/herlang.exe -DestinationPath target/release/herlang-x86_64-pc-windows-msvc.zip
-      
+
       - name: Release
         uses: softprops/action-gh-release@v2
         if: |
