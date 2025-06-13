@@ -72,7 +72,7 @@ impl fmt::Display for Object {
             Object::BreakStatement => write!(f, "[break statement]"),
             Object::ContinueStatement => write!(f, "[continue statement]"),
             Object::ReturnValue(ref value) => write!(f, "ReturnValue({value})"),
-            Object::Error(ref value) => write!(f, "Error({value})"),
+            Object::Error(ref value) => write!(f, "啊啊啊啊啊啊啊啊({value})"),
         }
     }
 }
