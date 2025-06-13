@@ -90,7 +90,7 @@ jobs:
           Compress-Archive -CompressionLevel Optimal -Force -Path target/release/herlang.exe -DestinationPath target/release/herlang-x86_64-pc-windows-msvc.zip
       
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: |
           startsWith(github.repository, 'justjavac') &&
           startsWith(github.ref, 'refs/tags/')
