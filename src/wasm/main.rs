@@ -77,7 +77,7 @@ pub fn eval(input_ptr: *mut c_char) -> *mut c_char {
     let mut env = Env::from(new_builtins());
 
     env.set(
-        String::from("输出"),
+        String::from("小作文"),
         &Object::Builtin(-1, |args| {
             for arg in args {
                 internal_print(&format!("{}", arg));
