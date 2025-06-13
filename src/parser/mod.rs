@@ -702,7 +702,7 @@ return 993322;
 
     #[test]
     fn test_string_literal_expr() {
-        let input = "\"hello world\";";
+        let input = "\"herllo world\";";
 
         let mut parser = Parser::new(Lexer::new(input));
         let program = parser.parse();
@@ -710,7 +710,7 @@ return 993322;
         check_parse_errors(&mut parser);
         assert_eq!(
             vec![Stmt::Expr(Expr::Literal(Literal::String(String::from(
-                "hello world",
+                "herllo world",
             ))))],
             program,
         );

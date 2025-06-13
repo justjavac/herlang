@@ -455,20 +455,20 @@ mod tests {
 
     #[test]
     fn test_string_expr() {
-        let input = "\"Hello World!\"";
+        let input = "\"Herllo World!\"";
 
         assert_eq!(
-            Some(Object::String(String::from("Hello World!"))),
+            Some(Object::String(String::from("Herllo World!"))),
             eval(input)
         );
     }
 
     #[test]
     fn test_string_concatenation() {
-        let input = "\"Hello\" + \" \" + \"World!\"";
+        let input = "\"Herllo\" + \" \" + \"World!\"";
 
         assert_eq!(
-            Some(Object::String(String::from("Hello World!"))),
+            Some(Object::String(String::from("Herllo World!"))),
             eval(input)
         );
     }
@@ -756,12 +756,12 @@ identity(100);
                 Some(Object::Int(5)),
             ),
             (
-                "let hello = fn() { return \"hello\"; }; hello();",
-                Some(Object::String("hello".to_string())),
+                "let herllo = fn() { return \"herllo\"; }; herllo();",
+                Some(Object::String("herllo".to_string())),
             ),
             (
-                "我认为 hello = fn() { return \"hello\"; }; hello();",
-                Some(Object::String("hello".to_string())),
+                "我认为 herllo = fn() { return \"herllo\"; }; herllo();",
+                Some(Object::String("herllo".to_string())),
             ),
             (
                 "我认为 fib = 想要你一个态度(n) { 姐妹们觉得呢 (n 我接受 0) { 反手举报 0; }; 姐妹们觉得呢 (n 我接受 1) { 反手举报 1; }; 反手举报 fib(n-1) + fib(n-2); }; fib(2);",
@@ -819,7 +819,7 @@ addTwo(2);
             // len
             ("len(\"\")", Some(Object::Int(0))),
             ("len(\"four\")", Some(Object::Int(4))),
-            ("len(\"hello world\")", Some(Object::Int(11))),
+            ("len(\"herllo world\")", Some(Object::Int(12))),
             ("len([1, 2, 3])", Some(Object::Int(3))),
             (
                 "len(1)",
@@ -976,9 +976,9 @@ addTwo(2);
                 ))),
             ),
             (
-                "\"Hello\" - \"World\"",
+                "\"Herllo\" - \"World\"",
                 Some(Object::Error(String::from(
-                    "unknown operator: Hello - World",
+                    "unknown operator: Herllo - World",
                 ))),
             ),
             (

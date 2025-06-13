@@ -164,7 +164,7 @@ fib(10);
 
 ```
 "Her Programming Language";
-"Hello" + " " + "World";
+"Herllo" + " " + "World";
 ```
 
 #### 想要你一个态度
