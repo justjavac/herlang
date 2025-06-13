@@ -171,7 +171,6 @@ fn scan_escape(first_char: char, chars: &mut Chars<'_>) -> Result<char, EscapeEr
                             // Stop updating value since we're sure that it's is incorrect already.
                             continue;
                         }
-                        let digit = digit;
                         value = value * 16 + digit;
                     }
                 };
