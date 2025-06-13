@@ -3,11 +3,22 @@ name: ci
 on: [push, pull_request]
 
 env:
+  CARGO_INCREMENTAL: 0
+  RUST_BACKTRACE: full
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.kind }} ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - macOS-13  # Intel
+          - macOS-latest  # Apple Silicon
+          - windows-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -17,6 +28,21 @@ jobs:
           toolchain: nightly
           override: true
           components: rustfmt, clippy
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |-
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/*/.*
+            target/*/build
+            target/*/deps
+          key:
+            ${{ matrix.config.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            ${{ matrix.config.os }}-
 
       - name: Format
         run: cargo fmt --all -- --check
@@ -37,3 +63,44 @@ jobs:
         run: |
           rustup target add wasm32-unknown-unknown
           cargo build --bin wasm -Z unstable-options --profile tiny --target wasm32-unknown-unknown --features=wasm
+
+      - name: Pre-release (linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: zip -r herlang-x86_64-unknown-linux-gnu.zip herlang
+        working-directory: target/release
+
+      - name: Pre-release (linux-aarch64)
+        if:  matrix.os == 'ubuntu-24.04-arm'
+        run: zip -r herlang-aarch64-unknown-linux-gnu.zip herlang
+        working-directory: target/release
+
+      - name: Pre-release (mac)
+        if: matrix.os == 'macOS-13'
+        run: zip -r herlang-x86_64-apple-darwin.zip herlang
+        working-directory: target/release
+
+      - name: Pre-release (aarch64-apple-darwin)
+        if: matrix.os == 'macOS-latest'
+        run: zip -r herlang-aarch64-apple-darwin.zip herlang
+        working-directory: target/release
+
+      - name: Pre-release (windows)
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          Compress-Archive -CompressionLevel Optimal -Force -Path target/release/herlang.exe -DestinationPath target/release/herlang-x86_64-pc-windows-msvc.zip
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: |
+          startsWith(github.repository, 'justjavac') &&
+          startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            target/release/herlang-x86_64-pc-windows-msvc.zip
+            target/release/herlang-x86_64-unknown-linux-gnu.zip
+            target/release/herlang-x86_64-apple-darwin.zip
+            target/release/herlang-aarch64-apple-darwin.zip
+            target/release/herlang-aarch64-unknown-linux-gnu.zip
+          draft: true
