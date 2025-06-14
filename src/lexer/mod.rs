@@ -528,7 +528,26 @@ fib(10);
 
         for expect in tokens {
             let tok = lexer.next_token();
-            dbg!(&tok);
+            assert_eq!(expect, tok);
+        }
+    }
+
+    #[test]
+    fn test_female_keyword() {
+        let input = r#"
+            宝宝你是一个 her = 微胖;
+        "#;
+        let tokens = vec![
+            Token::Let,
+            Token::Ident(String::from("her")),
+            Token::Assign,
+            Token::String(String::from("180kg")),
+        ];
+
+        let mut lexer = Lexer::new(input);
+
+        for expect in tokens {
+            let tok = lexer.next_token();
             assert_eq!(expect, tok);
         }
     }

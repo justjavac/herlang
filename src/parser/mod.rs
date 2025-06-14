@@ -1,4 +1,5 @@
 use crate::ast::*;
+use crate::constants::HER_KEY_WORDS;
 use crate::lexer::Lexer;
 use crate::token::Token;
 use std::fmt;
@@ -6,15 +7,25 @@ use std::fmt;
 #[derive(Debug, Clone)]
 pub enum ParseError {
     UnexpectedToken { want: Option<Token>, got: Token },
+    HerUnexpectedToken { got: String },
 }
 
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             ParseError::UnexpectedToken { want: w, got: g } => match w {
-                Some(w) => write!(f, "Unexpected Token: expected {w:?}, got {g:?}"),
-                None => write!(f, "Unexpected Token: no prefix rule for {g:?}"),
+                Some(w) => write!(
+                    f,
+                    "啊啊啊啊啊啊啊啊啊啊啊啊 Unexpected Token: expected {w:?}, got {g:?}"
+                ),
+                None => write!(
+                    f,
+                    "啊啊啊啊啊啊啊啊啊啊啊啊 Unexpected Token: no prefix rule for {g:?}"
+                ),
             },
+            ParseError::HerUnexpectedToken { got: g } => {
+                write!(f, "啊啊啊啊啊啊啊啊啊啊啊啊 SyntaxError: {g:?}")
+            }
         }
     }
 }
@@ -163,6 +174,14 @@ impl Parser {
         if !self.expect_next_token(Token::Assign) {
             return None;
         }
+
+        // 女性是不能被定义滴
+        if HER_KEY_WORDS.contains(&name.0.as_str()) {
+            self.errors.push(ParseError::HerUnexpectedToken {
+                got: format!("女性是不能被定义的！！！"),
+            });
+            return None;
+        };
 
         self.bump();
 

@@ -1,0 +1,22 @@
+{
+  "name": "herlang",
+  "version": "0.1.0",
+  "description": "> herlang 小仙女编程语言，使用 Rust 编写。",
+  "main": "index.js",
+  "scripts": {
+    "build": "cargo build --release --features=\"binaries\" --locked",
+    "wasm:build": "rustup target add wasm32-unknown-unknown && cargo build --bin wasm -Z unstable-options --profile tiny --target wasm32-unknown-unknown --features=wasm",
+    "wasm:copy:unix": "cp target/wasm32-unknown-unknown/tiny/wasm.wasm web/src/herlang.wasm",
+    "wasm:copy:win": "copy /Y target\\wasm32-unknown-unknown\\tiny\\wasm.wasm web\\src\\herlang.wasm",
+    "wasm": "npm run wasm:build && (npm run wasm:copy:unix || npm run wasm:copy:win)",
+    "start": "cd web && npm start",
+    "dev": "npm run wasm && npm run start"
+  },
+  "keywords": [
+    "herlang",
+    "小仙女",
+    "xxn"
+  ],
+  "author": "迷渡 <justjavac@gmail.com>",
+  "license": "ISC"
+}
