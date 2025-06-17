@@ -14,20 +14,23 @@ use std::borrow::Cow::{self, Borrowed, Owned};
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use rustyline::Cmd::{
+    HistorySearchBackward as HerstorySearchBackward, HistorySearchForward as HerstorySearchForward,
+};
 use rustyline::KeyEvent;
 use rustyline::completion::{Completer, Pair};
 use rustyline::error::ReadlineError;
 use rustyline::highlight::{CmdKind, Highlighter, MatchingBracketHighlighter};
-use rustyline::hint::{Hinter, HistoryHinter};
+use rustyline::hint::{Hinter, HistoryHinter as HerstoryHinter};
 use rustyline::validate::{self, Validator};
-use rustyline::{Cmd, CompletionType, Config, Context, EditMode, Editor};
+use rustyline::{CompletionType, Config, Context, EditMode, Editor};
 use rustyline_derive::Helper;
 
 #[derive(Helper)]
 struct HerHelper {
     env: Rc<RefCell<Env>>,
     highlighter: MatchingBracketHighlighter,
-    hinter: HistoryHinter,
+    hinter: HerstoryHinter,
     colored_prompt: String,
 }
 
@@ -152,15 +155,15 @@ fn main() -> rustyline::Result<()> {
     let h = HerHelper {
         env: evaluator.env.clone(),
         highlighter: MatchingBracketHighlighter::new(),
-        hinter: HistoryHinter {},
+        hinter: HerstoryHinter {},
         colored_prompt: "\x1b[32m>>\x1b[0m ".to_owned(),
     };
     let mut rl = Editor::with_config(config)?;
     rl.set_helper(Some(h));
-    rl.bind_sequence(KeyEvent::alt('n'), Cmd::HistorySearchForward);
-    rl.bind_sequence(KeyEvent::alt('p'), Cmd::HistorySearchBackward);
-    if rl.load_history("herlang_history.txt").is_err() {
-        println!("No previous history.");
+    rl.bind_sequence(KeyEvent::alt('n'), HerstorySearchForward);
+    rl.bind_sequence(KeyEvent::alt('p'), HerstorySearchBackward);
+    if rl.load_history("herlang_herstory.txt").is_err() {
+        println!("No previous herstory.");
     }
 
     println!("Herllo! This is the HER programming language!");
@@ -195,5 +198,5 @@ fn main() -> rustyline::Result<()> {
         }
     }
 
-    rl.append_history("herlang_history.txt")
+    rl.append_history("herlang_herstory.txt")
 }
