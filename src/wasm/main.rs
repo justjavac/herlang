@@ -26,6 +26,13 @@ fn internal_print(msg: &str) {
     }
 }
 
+fn wasm_output(args: Vec<Object>) -> Object {
+    for arg in args {
+        internal_print(&format!("{}", arg));
+    }
+    Object::Null
+}
+
 fn string_to_ptr(s: String) -> *mut c_char {
     CString::new(s).unwrap().into_raw()
 }
@@ -76,15 +83,8 @@ pub fn eval(input_ptr: *mut c_char) -> *mut c_char {
 
     let mut env = Env::from(new_builtins());
 
-    env.set(
-        String::from("小作文"),
-        &Object::Builtin(-1, |args| {
-            for arg in args {
-                internal_print(&format!("{}", arg));
-            }
-            Object::Null
-        }),
-    );
+    env.set(String::from("小作文"), &Object::Builtin(-1, wasm_output));
+    env.set(String::from("家人们"), &Object::Builtin(-1, wasm_output));
 
     let mut evaluator = Evaluator::new(Rc::new(RefCell::new(env)));
     let evaluated = evaluator.eval(&program).unwrap_or(Object::Null);
