@@ -65,6 +65,8 @@ jobs:
         run: cargo build --release --features="binaries" --locked
 
       - name: Build wasm
+        env:
+          RUSTFLAGS: -C link-arg=--allow-undefined
         run: |
           rustup target add wasm32-unknown-unknown
           cargo build --bin wasm -Z unstable-options --profile tiny --target wasm32-unknown-unknown --features=wasm
